@@ -1,5 +1,5 @@
 {
-  "name": "new-folder",
+  "name": "new-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,10 +15,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/rabehrb/rabehrb.git"
+    "url": "https://github.com/rabehrb203/newAPI.git"
   },
   "bugs": {
-    "url": "https://github.com/rabehrb/rabehrb/issues"
+    "url": "https://github.com/rabehrb203/newAPI.git"
   },
   "keywords": [],
   "author": "",
