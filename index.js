@@ -5,38 +5,60 @@ const cheerio = require("cheerio");
 
 const app = express();
 
-app.get("/mangas", async (req, res) => {
+app.get("/mangas/:page", async (req, res) => {
   try {
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
-    await page.goto("https://thunderscans.com/manga/?page=2");
+    const link = req.params.page;
+    const url = `https://thunderscans.com/manga/?page=${link}/`;
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
+    const mangaTitles = {};
 
-    const data = await page.evaluate(() => {
-      const dataList = [];
-      const items = document.querySelectorAll(".listupd .bs");
+    // استخراج العنوان
+    mangaTitles.title = $(".tt").text().trim();
 
-      items.forEach((item) => {
-        const title = item.querySelector(".tt").innerText;
-        const image = item.querySelector(".ts-post-image").getAttribute("src");
-        const link = item
-          .querySelector("a")
-          .getAttribute("href")
-          .substring(31)
-          .replace("/", "");
-        // const linkParts = link.split("/");
-        const rating = item.querySelector(".numscore").innerText;
-        const status = item.querySelector(".status i").innerText;
-        // const linkText = linkParts[linkParts.length - 1];
+    // استخراج العنوان البديل
+    // mangaTitles.alternativeTitles = $(".alternative .desktop-titles")
+    // .text()
+    // .trim();
 
-        dataList.push({ title, image, rating, status, link });
-      });
+    // استخراج التقييم
+    // mangaTitles.rating = $(".numscore").text().trim();
 
-      return dataList;
-    });
+    // استخراج حالة العمل
+    // mangaTitles.status = $(".imptdt .status i").text().trim();
+    res.json(mangaTitles);
 
-    await browser.close();
+    // const browser = await chromium.launch();
+    // const page = await browser.newPage();
+    // await page.goto("https://thunderscans.com/manga/?page=2");
 
-    res.json(data);
+    // const data = await page.evaluate(() => {
+    //   const dataList = [];
+    //   const items = document.querySelectorAll(".listupd .bs");
+
+    //   items.forEach((item) => {
+    //     const title = item.querySelector(".tt").innerText;
+    //     const image = item.querySelector(".ts-post-image").getAttribute("src");
+    //     const link = item
+    //       .querySelector("a")
+    //       .getAttribute("href")
+    //       .substring(31)
+    //       .replace("/", "");
+    //     // const linkParts = link.split("/");
+    //     const rating = item.querySelector(".numscore").innerText;
+    //     const status = item.querySelector(".status i").innerText;
+    //     // const linkText = linkParts[linkParts.length - 1];
+
+    //     dataList.push({ title, image, rating, status, link });
+    //   });
+
+    //   return dataList;
+    // });
+
+    // await browser.close();
+
+    // res.json(data);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
