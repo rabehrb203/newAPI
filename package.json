@@ -1,0 +1,34 @@
+{
+  "name": "new-folder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "engines": {
+    "node": "20.12.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rabehrb/rabehrb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rabehrb/rabehrb/issues"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "crawler": "^1.5.0",
+    "playwright": "^1.43.0",
+    "puppeteer": "^22.6.3",
+    "axios": "^1.6.8",
+    "turbocrawl": "^0.2.8"
+  }
+}
