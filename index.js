@@ -2,63 +2,36 @@ const express = require("express");
 const { chromium } = require("playwright");
 const axios = require("axios");
 const cheerio = require("cheerio");
+// const browserPath = process.env.BROWSER_PATH || "./browsers/chromium";
 
 const app = express();
 
-app.get("/mangas/:page", async (req, res) => {
+app.get("/mangas", async (req, res) => {
   try {
-    const link = req.params.page;
-    const url = `https://thunderscans.com/manga/?page=${link}/`;
-    const response = await axios.get(url);
+    // جلب محتوى صفحة العناوين باستخدام Axios
+    const response = await axios.get("https://thunderscans.com/manga/?page=2");
     const html = response.data;
+
+    // استخراج المعلومات باستخدام Cheerio
     const $ = cheerio.load(html);
-    const mangaTitles = {};
+    const dataList = [];
 
-    // استخراج العنوان
-    mangaTitles.title = $(".tt").text().trim();
+    // استخراج العناوين والصور والروابط والتقييم وحالة العمل
+    $(".listupd .bs").each((index, element) => {
+      const title = $(element).find(".tt").text().trim().replace("\t\t\t", "");
+      const image = $(element).find(".ts-post-image").attr("src");
+      const link = $(element)
+        .find("a")
+        .attr("href")
+        .substring(31)
+        .replace("/", "");
+      const rating = $(element).find(".numscore").text();
+      const status = $(element).find(".status i").text();
 
-    // استخراج العنوان البديل
-    // mangaTitles.alternativeTitles = $(".alternative .desktop-titles")
-    // .text()
-    // .trim();
+      dataList.push({ title, image, rating, status, link });
+    });
 
-    // استخراج التقييم
-    // mangaTitles.rating = $(".numscore").text().trim();
-
-    // استخراج حالة العمل
-    // mangaTitles.status = $(".imptdt .status i").text().trim();
-    res.json(mangaTitles);
-
-    // const browser = await chromium.launch();
-    // const page = await browser.newPage();
-    // await page.goto("https://thunderscans.com/manga/?page=2");
-
-    // const data = await page.evaluate(() => {
-    //   const dataList = [];
-    //   const items = document.querySelectorAll(".listupd .bs");
-
-    //   items.forEach((item) => {
-    //     const title = item.querySelector(".tt").innerText;
-    //     const image = item.querySelector(".ts-post-image").getAttribute("src");
-    //     const link = item
-    //       .querySelector("a")
-    //       .getAttribute("href")
-    //       .substring(31)
-    //       .replace("/", "");
-    //     // const linkParts = link.split("/");
-    //     const rating = item.querySelector(".numscore").innerText;
-    //     const status = item.querySelector(".status i").innerText;
-    //     // const linkText = linkParts[linkParts.length - 1];
-
-    //     dataList.push({ title, image, rating, status, link });
-    //   });
-
-    //   return dataList;
-    // });
-
-    // await browser.close();
-
-    // res.json(data);
+    res.json(dataList);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });

@@ -24,11 +24,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@playwright/test": "^1.43.0",
+    "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
     "crawler": "^1.5.0",
     "playwright": "^1.43.0",
     "puppeteer": "^22.6.3",
-    "axios": "^1.6.8",
     "turbocrawl": "^0.2.8"
   }
 }
