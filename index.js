@@ -37,7 +37,6 @@ app.get("/mangas", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 app.get("/details/:link", async (req, res) => {
   try {
     const link = req.params.link;
@@ -81,7 +80,6 @@ app.get("/details/:link", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 app.get("/chapters/:link", async (req, res) => {
   try {
     const link = req.params.link;
@@ -131,7 +129,7 @@ app.get("/images/:link", async (req, res) => {
 
     const url = `https://thunderscans.com/${link}/`;
 
-    const browser = await chromium.launch({ executablePath: browserPath });
+    const browser = await chromium.launch();
     const page = await browser.newPage();
     await page.goto(url);
 
