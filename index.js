@@ -3,7 +3,6 @@ const { chromium } = require("playwright");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const browserPath = process.env.BROWSER_PATH || "./browsers/chromium";
-const { devices } = require("playwright");
 const { PlaywrightTestConfig } = require("@playwright/test");
 const { devices } = require("playwright");
 
