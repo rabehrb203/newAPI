@@ -27,6 +27,7 @@
   "license": "ISC",
   "dependencies": {
     "@playwright/test": "^1.43.0",
+    "@wdio/browserstack-service": "^8.35.1",
     "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
     "chrome-aws-lambda": "^10.1.0",
