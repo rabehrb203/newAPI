@@ -34,7 +34,8 @@
     "express": "^4.19.2",
     "playwright-core": "^1.43.0",
     "puppeteer": "^22.6.3",
-    "turbocrawl": "^0.2.8"
+    "turbocrawl": "^0.2.8",
+    "webdriverio": "^8.35.1"
   },
   "devDependencies": {
     "playwright": "^1.43.0"
