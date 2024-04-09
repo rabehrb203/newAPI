@@ -7,15 +7,7 @@ const { PlaywrightTestConfig } = require("@playwright/test");
 const { devices } = require("playwright");
 
 const app = express();
-const browserstackBrowser = await remote({
-  browserName: "firefox",
-  browserContext: "default",
-  gridURL: "https://hub-cloud.browserstack.com/wd/hub",
-  browserstack: {
-    username: "Ykazeichi_VRdLU0",
-    accessKey: "Q6tVtzzG5LTsdPDgqxkr",
-  },
-});
+
 app.get("/mangas", async (req, res) => {
   try {
     // جلب محتوى صفحة العناوين باستخدام Axios
@@ -135,6 +127,15 @@ app.get("/chapters/:link", async (req, res) => {
 
 app.get("/images/:link", async (req, res) => {
   try {
+    const browserstackBrowser = await remote({
+      browserName: "firefox",
+      browserContext: "default",
+      gridURL: "https://hub-cloud.browserstack.com/wd/hub",
+      browserstack: {
+        username: "Ykazeichi_VRdLU0",
+        accessKey: "Q6tVtzzG5LTsdPDgqxkr",
+      },
+    });
     const link = req.params.link;
 
     const url = `https://thunderscans.com/${link}/`;
