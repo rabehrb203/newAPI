@@ -1,16 +1,30 @@
 module.exports = {
   projects: [
     {
-      name: 'Chromium',
-      use: { browserName: 'chromium' },
+      name: "Desktop Chrome",
+      use: {
+        browserName: "chromium",
+        browserContext: "default",
+        // إعدادات BrowserStack
+        grid: "https://hub-cloud.browserstack.com/wd/hub",
+        browserstack: {
+          username: "Ykazeichi_VRdLU0",
+          accessKey: "Q6tVtzzG5LTsdPDgqxkr",
+        },
+      },
     },
     {
-      name: 'Firefox',
-      use: { browserName: 'firefox' },
-    },
-    {
-      name: 'WebKit',
-      use: { browserName: 'webkit' },
+      name: "Desktop Firefox",
+      use: {
+        browserName: "firefox",
+        browserContext: "default",
+        // إعدادات BrowserStack
+        grid: "https://hub-cloud.browserstack.com/wd/hub",
+        browserstack: {
+          username: "Ykazeichi_VRdLU0",
+          accessKey: "Q6tVtzzG5LTsdPDgqxkr",
+        },
+      },
     },
   ],
 };

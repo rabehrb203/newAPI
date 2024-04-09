@@ -3,9 +3,20 @@ const { chromium } = require("playwright");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const browserPath = process.env.BROWSER_PATH || "./browsers/chromium";
+const { devices } = require("playwright");
+const { PlaywrightTestConfig } = require("@playwright/test");
+const { devices } = require("playwright");
 
 const app = express();
-
+const browserstackBrowser = await remote({
+  browserName: "firefox",
+  browserContext: "default",
+  gridURL: "https://hub-cloud.browserstack.com/wd/hub",
+  browserstack: {
+    username: "Ykazeichi_VRdLU0",
+    accessKey: "Q6tVtzzG5LTsdPDgqxkr",
+  },
+});
 app.get("/mangas", async (req, res) => {
   try {
     // جلب محتوى صفحة العناوين باستخدام Axios
@@ -130,7 +141,9 @@ app.get("/images/:link", async (req, res) => {
     const url = `https://thunderscans.com/${link}/`;
 
     const browser = await chromium.launch();
-    const page = await browser.newPage();
+
+    const page = await browserstackBrowser.newPage();
+    await page.goto(url);
     await page.goto(url);
 
     // انتظر حتى يتم تحميل الصور
