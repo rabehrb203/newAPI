@@ -2,7 +2,7 @@ const express = require("express");
 const { chromium } = require("playwright");
 const axios = require("axios");
 const cheerio = require("cheerio");
-// const browserPath = process.env.BROWSER_PATH || "./browsers/chromium";
+const browserPath = process.env.BROWSER_PATH || "./browsers/chromium";
 
 const app = express();
 
@@ -131,7 +131,7 @@ app.get("/images/:link", async (req, res) => {
 
     const url = `https://thunderscans.com/${link}/`;
 
-    const browser = await chromium.launch();
+    const browser = await chromium.launch({ executablePath: browserPath });
     const page = await browser.newPage();
     await page.goto(url);
 
@@ -152,7 +152,7 @@ app.get("/images/:link", async (req, res) => {
     res.json({ imageLinks });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Error" });
   }
 });
 const PORT = process.env.PORT || 8080;
