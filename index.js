@@ -144,11 +144,10 @@ app.get("/images/:link", async (req, res) => {
 
     const page = await browserstackBrowser.newPage();
     await page.goto(url);
-    await page.goto(url);
+    console.log("Title : " + url + " is loaded" + "\n");
 
     // انتظر حتى يتم تحميل الصور
     await page.waitForSelector(".ts-main-image", { timeout: 800000 });
-    console.log("Title : " + page.title);
 
     // استخراج روابط الصور
     const imageLinks = await page.$$eval(
