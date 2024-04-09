@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const { remote } = require("webdriverio");
+const webdriverio = require("webdriverio");
 
 const app = express();
 
@@ -102,12 +103,11 @@ app.get("/chapters/:link", async (req, res) => {
 app.get("/images/:link", async (req, res) => {
   try {
     const browserstackBrowser = await remote({
-      browserName: "firefox",
-      browserContext: "default",
-      gridURL: "https://hub-cloud.browserstack.com/wd/hub",
-      browserstack: {
-        username: "Ykazeichi_VRdLU0",
-        accessKey: "Q6tVtzzG5LTsdPDgqxkr",
+      capabilities: {
+        "browserstack.user": "Ykazeichi_VRdLU0",
+        "browserstack.key": "Q6tVtzzG5LTsdPDgqxkr",
+        browserName: "chrome",
+        browser: "chrome",
       },
     });
 
