@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "npx puppeteer browsers install chrome",
-    "build": "npx puppeteer browsers install chrome"
+    "test": "npx playwright test && npx playwright install",
+    "build": "npx playwright install"
   },
   "engines": {
     "node": "20.12.0"
@@ -21,7 +21,8 @@
   },
   "bugs": {
     "url": "https://github.com/rabehrb203/newAPI.git"
-  },
+
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
