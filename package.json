@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "npx playwright test && npx playwright install",
-    "build": "npx playwright install"
+    "test": "npx puppeteer browsers install chrome",
+    "build": "npx puppeteer browsers install chrome"
   },
   "engines": {
     "node": "20.12.0"
