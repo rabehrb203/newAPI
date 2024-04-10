@@ -104,7 +104,7 @@ app.get("/chapters/:link", async (req, res) => {
 
 app.get("/images/:link", async (req, res) => {
   try {
-    console.log("Starting the scraping process...");
+    // console.log("Starting the scraping process...");
     const link = req.params.link;
     const url = `https://thunderscans.com/${link}/`;
 
