@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 
 const app = express();
 
@@ -104,7 +105,19 @@ app.get("/images/:link", async (req, res) => {
     console.log("Starting the scraping process...");
     const link = req.params.link;
     const url = `https://thunderscans.com/${link}/`;
-    const browser = await puppeteer.launch();
+
+    options = {
+      headless: true,
+      // executablePath: '/usr/bin/chromium-browser',
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-web-security",
+        "--hide-scrollbars",
+        "--font-render-hinting=none",
+      ],
+    };
+    const browser = await puppeteer.launch(options);
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitForSelector("#readerarea img.ts-main-image");
