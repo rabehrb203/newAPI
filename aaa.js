@@ -8,30 +8,24 @@ const app = express();
 
 app.get("/mangas", async (req, res) => {
   try {
-    const response = await axios.get("https://lekmanga.net/manga/");
+    const response = await axios.get("https://thunderscans.com/manga/?page=2");
     const html = response.data;
     const $ = cheerio.load(html);
     const dataList = [];
 
-    $(".page-content-listing.item-default .col-12 col-md-6.badge-pos-1").each(
-      (index, element) => {
-        const title = $(element)
-          .find(".h5")
-          .text()
-          .trim()
-          .replace("\t\t\t", "");
-        const image = $(element).find(".img-responsive").attr("src");
-        const link = $(element)
-          .find("a")
-          .attr("href")
-          .substring(31)
-          .replace("/", "");
-        const rating = $(element).find(".chapter.font-meta").text();
-        const status = $(element).find(".chapter.font-meta").text();
+    $(".listupd .bs").each((index, element) => {
+      const title = $(element).find(".tt").text().trim().replace("\t\t\t", "");
+      const image = $(element).find(".ts-post-image").attr("src");
+      const link = $(element)
+        .find("a")
+        .attr("href")
+        .substring(31)
+        .replace("/", "");
+      const rating = $(element).find(".numscore").text();
+      const status = $(element).find(".status i").text();
 
-        dataList.push({ title, image, rating, status, link });
-      }
-    );
+      dataList.push({ title, image, rating, status, link });
+    });
 
     res.json(dataList);
   } catch (error) {
