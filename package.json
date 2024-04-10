@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "npx playwright test && npx playwright install",
-    "build": "npx playwright install"
+    "test": "npx playwright test && npm install --legacy-peer-deps",
+    "build": "npm install --legacy-peer-deps"
   },
   "engines": {
     "node": "20.12.0"
@@ -21,8 +21,7 @@
   },
   "bugs": {
     "url": "https://github.com/rabehrb203/newAPI.git"
-
-},
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
