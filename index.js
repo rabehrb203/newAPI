@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
 // const puppeteer = require("puppeteer");
-const puppeteer = require("puppeteer-core");
+const puppeteer = require("puppeteer");
 
 const app = express();
 
