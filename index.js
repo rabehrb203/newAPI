@@ -118,7 +118,13 @@ app.get("/images/:link", async (req, res) => {
         "--font-render-hinting=none",
       ],
     };
-    const browser = await puppeteer.launch(options);
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
+    });
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitForSelector("#readerarea img.ts-main-image");
