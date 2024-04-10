@@ -15,21 +15,17 @@ app.get("/mangas", async (req, res) => {
 
     $(".page-content-listing.item-default .col-12 col-md-6.badge-pos-1").each(
       (index, element) => {
-        const title = $(element)
-          .find(".h5")
-          .text()
-          .trim()
-          .replace("\t\t\t", "");
-        const image = $(element).find(".img-responsive").attr("src");
-        const link = $(element)
-          .find("a")
-          .attr("href")
-          .substring(31)
-          .replace("/", "");
-        const rating = $(element).find(".chapter.font-meta").text();
-        const status = $(element).find(".chapter.font-meta").text();
-
-        dataList.push({ title, image, rating, status, link });
+        const title = $(element).find("h3 .h5").text().trim();
+        // const image = $(element).find(".img-responsive").attr("src");
+        // const link = $(element)
+        // .find("a")
+        // .attr("href")
+        // .substring(31)
+        // .replace("/", "");
+        // const rating = $(element).find(".chapter.font-meta").text();
+        // const status = $(element).find(".chapter.font-meta").text();
+        // , image, rating, status, link
+        dataList.push({ title });
       }
     );
 
