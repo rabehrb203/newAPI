@@ -1,8 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const { remote } = require("webdriverio");
-const webdriverio = require("webdriverio");
+// const { remote } = require("webdriverio");
+// const webdriverio = require("webdriverio");
 
 const app = express();
 
@@ -102,38 +102,38 @@ app.get("/chapters/:link", async (req, res) => {
   }
 });
 
-app.get("/images/:link", async (req, res) => {
-  try {
-    const browserstackBrowser = await remote({
-      capabilities: {
-        "browserstack.user": "Ykazeichi_VRdLU0",
-        "browserstack.key": "Q6tVtzzG5LTsdPDgqxkr",
-        browserName: "chrome",
-        browser: "chrome",
-      },
-    });
+// app.get("/images/:link", async (req, res) => {
+//   try {
+//     const browserstackBrowser = await remote({
+//       capabilities: {
+//         "browserstack.user": "Ykazeichi_VRdLU0",
+//         "browserstack.key": "Q6tVtzzG5LTsdPDgqxkr",
+//         browserName: "chrome",
+//         browser: "chrome",
+//       },
+//     });
 
-    const link = req.params.link;
-    const url = `https://thunderscans.com/${link}/`;
-    const page = await browserstackBrowser.newPage();
-    await page.goto(url);
-    console.log("Title : " + url + " is loaded" + "\n");
+//     const link = req.params.link;
+//     const url = `https://thunderscans.com/${link}/`;
+//     const page = await browserstackBrowser.newPage();
+//     await page.goto(url);
+//     console.log("Title : " + url + " is loaded" + "\n");
 
-    await page.waitForSelector(".ts-main-image", { timeout: 800000 });
+//     await page.waitForSelector(".ts-main-image", { timeout: 800000 });
 
-    const imageLinks = await page.$$eval(
-      "#readerarea img.ts-main-image",
-      (images) => images.map((img) => img.src)
-    );
+//     const imageLinks = await page.$$eval(
+//       "#readerarea img.ts-main-image",
+//       (images) => images.map((img) => img.src)
+//     );
 
-    await browserstackBrowser.deleteSession();
+//     await browserstackBrowser.deleteSession();
 
-    res.json({ imageLinks });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal Error" });
-  }
-});
+//     res.json({ imageLinks });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ error: "Internal Error" });
+//   }
+// });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
