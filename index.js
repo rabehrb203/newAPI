@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 // const puppeteer = require("puppeteer");
 const puppeteer = require("puppeteer-core");
 const chromium = require("@sparticuz/chromium");
+const { Cluster } = require("puppeteer-cluster");
 
 const app = express();
 
@@ -118,25 +119,46 @@ app.get("/images/:link", async (req, res) => {
         "--font-render-hinting=none",
       ],
     };
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-      ignoreHTTPSErrors: true,
+    // browser = await puppeteer.launch({
+    //   args: chromium.args,
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath(),
+    //   headless: chromium.headless,
+    //   ignoreHTTPSErrors: true,
+    // });
+
+    const cluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_CONTEXT,
+      maxConcurrency: 2, // تحديد عدد المتصفحات القابلة للاستخدام في نفس الوقت
     });
-    const page = await browser.newPage();
-    await page.goto(url);
-    await page.waitForSelector("#readerarea img.ts-main-image");
+    // const page = await browser.newPage();
+    // await page.goto(url);
+    // await page.waitForSelector("#readerarea img.ts-main-image");
 
-    const imageLinks = await page.$$eval(
-      "#readerarea img.ts-main-image",
-      (images) => images.map((img) => img.src)
-    );
+    await cluster.task(async ({ page, data: url }) => {
+      await page.goto(url);
+      await page.waitForSelector("#readerarea img.ts-main-image");
+      const imageLinks = await page.$$eval(
+        "#readerarea img.ts-main-image",
+        (images) => images.map((img) => img.src)
+      );
+      res.json({ imageLinks });
+    });
 
-    await browser.close();
+    const urls = [
+      "https://thunderscans.com/my-younger-sister-was-a-genius-chapter-5/",
+      "https://thunderscans.com/my-younger-sister-was-a-genius-chapter-5/",
+      "https://thunderscans.com/my-younger-sister-was-a-genius-chapter-5/",
+    ];
 
-    res.json({ imageLinks });
+    // تشغيل المهام على الصفحات
+    await Promise.all(urls.map((url) => cluster.queue(url)));
+
+    // إيقاف العمليات
+    await cluster.idle();
+    await cluster.close();
+
+    // res.json({ imageLinks });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Error" });
