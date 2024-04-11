@@ -10,21 +10,21 @@ const app = express();
 
 app.get("/mangas", async (req, res) => {
   try {
-    const response = await axios.get("https://thunderscans.com/manga/?page=2");
+    const response = await axios.get("https://lekmanga.net/manga/page/2");
     const html = response.data;
     const $ = cheerio.load(html);
     const dataList = [];
 
-    $(".listupd .bs").each((index, element) => {
-      const title = $(element).find(".tt").text().trim().replace("\t\t\t", "");
-      const image = $(element).find(".ts-post-image").attr("src");
+    $(".tab-content-wrap .page-item-detail.manga").each((index, element) => {
+      const title = $(element).find(".h5").text().trim().replace("\t\t\t", "");
+      const image = $(element).find(".img-responsive").attr("src");
       const link = $(element)
         .find("a")
         .attr("href")
-        .substring(31)
+        .substring(27)
         .replace("/", "");
-      const rating = $(element).find(".numscore").text();
-      const status = $(element).find(".status i").text();
+      const rating = $(element).find(".chapter.font-meta").text();
+      const status = $(element).find(".chapter.font-meta").text();
 
       dataList.push({ title, image, rating, status, link });
     });
@@ -102,63 +102,20 @@ app.get("/chapters/:link", async (req, res) => {
   }
 });
 
-app.get("/images/:link", async (req, res) => {
+app.get("/images/:link/:page", async (req, res) => {
   try {
-    // console.log("Starting the scraping process...");
     const link = req.params.link;
-    const url = `https://thunderscans.com/${link}/`;
+    const page = req.params.page;
+    const url = `https://lekmanga.net/manga/${link}/${page}`;
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
 
-    options = {
-      headless: true,
-      // executablePath: '/usr/bin/chromium-browser',
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-web-security",
-        "--hide-scrollbars",
-        "--font-render-hinting=none",
-      ],
-    };
-    // browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath(),
-    //   headless: chromium.headless,
-    //   ignoreHTTPSErrors: true,
-    // });
+    const imageLinks = $(".reading-content img.wp-manga-chapter-img")
+      .map((_, img) => $(img).attr("src"))
+      .get();
 
-    const cluster = await Cluster.launch({
-      concurrency: Cluster.CONCURRENCY_CONTEXT,
-      maxConcurrency: 2, // تحديد عدد المتصفحات القابلة للاستخدام في نفس الوقت
-    });
-    // const page = await browser.newPage();
-    // await page.goto(url);
-    // await page.waitForSelector("#readerarea img.ts-main-image");
-
-    await cluster.task(async ({ page, data: url }) => {
-      await page.goto(url);
-      await page.waitForSelector("#readerarea img.ts-main-image");
-      const imageLinks = await page.$$eval(
-        "#readerarea img.ts-main-image",
-        (images) => images.map((img) => img.src)
-      );
-      res.json({ imageLinks });
-    });
-
-    const urls = [
-      "https://thunderscans.com/my-younger-sister-was-a-genius-chapter-5/",
-      "https://thunderscans.com/my-younger-sister-was-a-genius-chapter-5/",
-      "https://thunderscans.com/my-younger-sister-was-a-genius-chapter-5/",
-    ];
-
-    // تشغيل المهام على الصفحات
-    await Promise.all(urls.map((url) => cluster.queue(url)));
-
-    // إيقاف العمليات
-    await cluster.idle();
-    await cluster.close();
-
-    // res.json({ imageLinks });
+    res.json({ imageLinks });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Error" });
